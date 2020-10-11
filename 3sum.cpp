@@ -3,47 +3,79 @@ using namespace std;
 class Solution
 {
 public:
-    void threeSum(vector<int> &nums)
+    vector<vector<int>> threeSum(vector<int> &nums)
     {
+
+        int n = nums.size();
+        vector<vector<int>> zero_sum;
+
+        if (n < 3)
+            return zero_sum;
+
         sort(nums.begin(), nums.end());
-        int N = sizeof(nums) / sizeof(nums[0]);
-        int start, end;
-        int a, b, c;
-        typedef vector<int> pii;
-        vector<int> v;
-        vector<pii> ans;
 
-        for (int i = 0; i < N; i++)
+        // first fix an element ans search for a pair such that these 3
+        // form the sum 0;
+        // lets consider a triplet with sum 0: a, b, c & their positions :
+        // i, j, k.
+        for (int i = 0; i < n - 2; i++)
         {
-            start = i + 1;
-            end = N - 1;
-            a = nums[i];
 
-            while (start < end && start >= 0 && end < N && start != i && end != i)
+            int a = nums[i];
+
+            // if a is greater than 0, no way any triplet can form zero
+            // from here onwards, as nums is sorted.
+            if (a > 0)
+                break;
+
+            // if it is equal to last element, this will result into dupilcacy
+            // so we will skip this
+            if (i > 0 && nums[i] == nums[i - 1])
+                continue;
+
+            int j = i + 1, k = n - 1;
+
+            // now we are left with a typical binary search problem
+            while (j < k)
             {
-                b = nums[start];
-                c = nums[end];
-                if (a = (b + c))
+
+                int b = nums[j], c = nums[k];
+
+                if ((a + b + c) == 0)
                 {
-                    v.push_back(a);
-                    v.push_back(b);
-                    v.push_back(c);
-                    ans.push_back(v);
-                    start++;
-                    end--;
-                    continue;
+                    vector<int> temp{a, b, c};
+                    zero_sum.push_back(temp);
+
+                    // there might be other triplets including a
+                    // so we will increase j till num[j] == b
+                    // & decrease k till num[k] == c to avoid duplicacy
+                    while (j < k && b == nums[++j])
+                        ;
+                    while (k > j && c == nums[--k])
+                        ;
                 }
-                if (a > b + c)
+
+                else if ((a + b + c) > 0)
                 {
-                    start++;
+                    k--;
                 }
+
                 else
                 {
-                    end--;
+                    j++;
                 }
             }
         }
-        // return ans;
+
+        for (auto i : zero_sum)
+        {
+            for (auto j : i)
+            {
+                cout << j << " ";
+            }
+            cout << endl;
+        }
+        return zero_sum;
     }
 };
 
@@ -51,6 +83,7 @@ int main()
 {
     Solution s;
     int nums[] = {-1, 0, 1, 2, -1, -4};
+    // int nums[] = {};
     int N = sizeof(nums) / sizeof(nums[0]);
     vector<int> v(nums, nums + N);
     s.threeSum(v);
