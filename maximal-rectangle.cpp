@@ -6,6 +6,8 @@ public:
     int maximalRectangle(vector<vector<char>> &matrix)
     {
         int m = matrix.size();
+        if (m == 0)
+            return 0;
         int n = matrix[0].size();
         vector<int> left(n);
         vector<int> right(n);
@@ -17,7 +19,9 @@ public:
             for (int j = 0; j < n; j++)
             {
                 if (matrix[i][j] == '1')
+                {
                     height[j]++;
+                }
                 else
                 {
                     height[j] = 0;
@@ -49,6 +53,10 @@ public:
                     rightBound = j;
                 }
             }
+            for (int j = 0; j < n; j++)
+            {
+                mx = max(mx, (right[j] - left[j]) * height[j]);
+            }
             for (auto i : height)
             {
                 cout << i << " ";
@@ -66,6 +74,7 @@ public:
             cout << endl;
             cout << endl;
         }
+        return mx;
     }
 };
 int main()
@@ -76,6 +85,7 @@ int main()
         {'1', '0', '1', '1', '1'},
         {'1', '1', '1', '1', '1'},
         {'1', '0', '0', '1', '0'}};
-    s.maximalRectangle(matrix);
+    cout << s.maximalRectangle(matrix);
+
     return 0;
 }
